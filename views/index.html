@@ -1,0 +1,10 @@
+
+<h1>{{ title }}</h1>
+
+<p>This is a super simple template.</p>
+
+<ul>
+  {% for tweetPost in tweets %}
+    <li> {{ tweetPost.name }} - {{ tweetPost.content }}</li>
+  {% endfor %}
+</ul>

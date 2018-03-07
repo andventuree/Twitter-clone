@@ -1,15 +1,29 @@
-const express = require( 'express' );
-const app = express();
-var morgan = require('morgan'); //creates logging middle-ware
+const express = require( 'express' ),
+      app = express(), //creates instance of express app
+      morgan = require('morgan'), //creates logging middle-ware
+      nunjucks = require('nunjucks'),
+      routes = require('./routes'); //assumes its looking for an index.js file
 
+nunjucks.configure('views', {noCache : true}); // point nunjucks to the proper directory for templates
+app.set('view engine', 'html'); // have res.render work with html files
+app.engine('html', nunjucks.render); // when giving html files to res.render, tell it to use nunjucks
 
+app.use(morgan('dev'));
+//after passing through morgan, then run through routes too
+app.use('/', routes); //for any incoming requests, plug them into this 1 stand alone router
+//which then refers to the index.js file!
 
+// let locals = {
+//   title : 'booger',
+//   people: [
+//     {name : 'ling ling'},
+//     {name : 'wai wai'}
+//   ]
+// };
 
-app.get('/', function(req, res){
-  res.send('hi booger');
-})
-
-
+// app.get('/', function(req, res){ //all routing moved to index.js
+//   res.render('index', locals)
+// })
 
 app.listen(3000, function(){
   console.log('Server 3000 is running');

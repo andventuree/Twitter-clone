@@ -4,7 +4,7 @@
   "description": "a cool tweet app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start" : "nodemon app.js"
   },
   "author": "Andrew wong",
   "license": "ISC",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/andventuree/Twitter-clone/issues"
   },
-  "homepage": "https://github.com/andventuree/Twitter-clone#readme"
+  "homepage": "https://github.com/andventuree/Twitter-clone#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
+  }
 }

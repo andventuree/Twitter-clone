@@ -8,7 +8,7 @@ let data = [];
 
 //ARRAY METHODS FROM LODASH
 function add (name, content) {
-  data.push({ name: name, content: content });
+  data.push({ name: name, content: content, id: data.length });
 }
 
 function list () {
@@ -37,9 +37,9 @@ const getFakeTweet = function() {
   return "Fullstack Academy is " + randArrayEl(awesome_adj) + "! The instructors are just so " + randArrayEl(awesome_adj) + ". #fullstacklove #codedreams";
 };
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 20; i++) {
   module.exports.add( getFakeName(), getFakeTweet() );
 }
 
-add('Andrew', 'I am making a twitter clone!'); //first static entry
+add('Andrew', 'I am making a twitter clone! #Goals'); //first static entry
 // console.log(data);

@@ -2,7 +2,10 @@ const express = require( 'express' ),
       app = express(), //creates instance of express app
       morgan = require('morgan'), //creates logging middle-ware
       nunjucks = require('nunjucks'),
-      routes = require('./routes'); //assumes its looking for an index.js file
+      routes = require('./routes'), //assumes its looking for an index.js file
+      fs = require('fs'),
+      path = require('path'),
+      bodyParser = require('body-parser');
 
 nunjucks.configure('views', {noCache : true}); // point nunjucks to the proper directory for templates
 app.set('view engine', 'html'); // have res.render work with html files
@@ -10,20 +13,14 @@ app.engine('html', nunjucks.render); // when giving html files to res.render, te
 
 app.use(morgan('dev'));
 //after passing through morgan, then run through routes too
+app.use(bodyParser.urlencoded({extended: true})); //for html form submits
+app.use(express.static(path.join(__dirname, 'public'))) //serves up files from public folder
+
+
 app.use('/', routes); //for any incoming requests, plug them into this 1 stand alone router
 //which then refers to the index.js file!
 
-// let locals = {
-//   title : 'booger',
-//   people: [
-//     {name : 'ling ling'},
-//     {name : 'wai wai'}
-//   ]
-// };
 
-// app.get('/', function(req, res){ //all routing moved to index.js
-//   res.render('index', locals)
-// })
 
 app.listen(3000, function(){
   console.log('Server 3000 is running');

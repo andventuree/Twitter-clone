@@ -2,27 +2,33 @@ const express = require('express'),
       router = express.Router(),
       tweetBank = require('../tweetBank'); // .. means look up 1 folder above
 
-router.get('/', function(req, res, next){
-  var tweetData = tweetBank.list();
-  res.render('index', { title : 'Twitter Clone', tweets : tweetData, showForm : true}) //tweets object is going to passed into index.js
-});
+//If we pass an io instance into this function, we will be able to use it in our routes.
+module.exports = function(io) {
+  router.get('/', function(req, res, next){
+    var tweetData = tweetBank.list();
+    res.render('index', { title : 'Twitter Clone', tweets : tweetData, showForm : true}) //tweets object is going to passed into index.js
+  });
 
-router.get('/users/:name', function(req, res, next){
-  var tweetsForName = tweetBank.find({ name: req.params.name});
-  res.render('index', {title: 'Twitter Clone', tweets: tweetsForName, showForm: true, username: req.params.name })
-});
+  router.get('/users/:name', function(req, res, next){
+    var tweetsForName = tweetBank.find({ name: req.params.name});
+    res.render('index', {title: 'Twitter Clone', tweets: tweetsForName, showForm: true, username: req.params.name })
+  });
 
-router.get('/tweets/:id', function(req, res, next){
-  var tweetsId = tweetBank.find({ id: +req.params.id});
-  res.render('index', {title: 'Twitter Clone', tweets: tweetsId })
-});
+  router.get('/tweets/:id', function(req, res, next){
+    var tweetsId = tweetBank.find({ id: +req.params.id});
+    res.render('index', {title: 'Twitter Clone', tweets: tweetsId })
+  });
 
-router.post('/tweets', function(req, res, next){
-  tweetBank.add(req.body.name, req.body.text);
-  res.redirect('/'); //give instructions to browser to go to diff page
-});
+  //adds a new tweet
+  router.post('/tweets', function(req, res, next){
+    // tweetBank.add(req.body.name, req.body.content);
+    var newTweet = tweetBank.add(req.body.name, req.body.content)
+    io.sockets.emit('new_Tweet', newTweet);
+    res.redirect('/'); //give instructions to browser to go to diff page
+  });
 
-module.exports = router;
+  return router;
+};
 
 // Express.static under the hood
 // function staticMiddleware(req,res,next){

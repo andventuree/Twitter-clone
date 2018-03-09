@@ -5,7 +5,8 @@ const express = require( 'express' ),
       routes = require('./routes'), //assumes its looking for an index.js file
       fs = require('fs'),
       path = require('path'),
-      bodyParser = require('body-parser');
+      bodyParser = require('body-parser'),
+      socketio = require('socket.io');
 
 nunjucks.configure('views', {noCache : true}); // point nunjucks to the proper directory for templates
 app.set('view engine', 'html'); // have res.render work with html files
@@ -16,16 +17,14 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true})); //for html form submits
 app.use(express.static(path.join(__dirname, 'public'))) //serves up files from public folder
 
-
-app.use('/', routes); //for any incoming requests, plug them into this 1 stand alone router
-//which then refers to the index.js file!
-
-
-
-app.listen(3000, function(){
+var server = app.listen(3000, function(){
   console.log('Server 3000 is running');
 });
+var io = socketio.listen(server);
 
+//moved down to have access to io instance
+app.use('/', routes(io)); //for any incoming requests, plug them into this 1 stand alone router
+//which then refers to the index.js file!
 
 // ***************************************************************
 // If we did not have EXPRESS! //helps to route http requests
